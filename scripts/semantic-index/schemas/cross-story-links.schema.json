@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["links"],
+  "properties": {
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from_story", "to_story", "relationship", "confidence", "reason"],
+        "properties": {
+          "from_story": {"type": "string"},
+          "to_story": {"type": "string"},
+          "relationship": {
+            "type": "string",
+            "enum": ["DEPENDS_ON", "EXTENDS", "CONFLICTS_WITH", "SAME_PROCESS", "REGRESSION_RISK", "SUPERSEDES"]
+          },
+          "confidence": {"type": "string", "enum": ["high", "medium"]},
+          "reason": {"type": "string"},
+          "shared_concepts": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

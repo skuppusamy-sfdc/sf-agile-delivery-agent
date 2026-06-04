@@ -1,0 +1,49 @@
+# Semantic Index Build Configuration
+# Provider-agnostic: change 'adapter' to switch LLM providers without code changes.
+
+adapter: gateway_direct  # Options: gateway_direct, anthropic_direct, anthropic_batch, openai_batch, file_based
+
+# Output directories
+output_dir: .semantic-index-cache
+index_output_dir: knowledge
+
+# Model selection per index type
+# Use reasoning-capable models for semantic tasks, cheaper models for extraction
+models:
+  glossary: claude-sonnet-4-6
+  semantic_similarity: claude-sonnet-4-6
+  story_summaries: claude-haiku-4-5-20251001
+  business_rules: claude-haiku-4-5-20251001
+  cross_story_links: claude-sonnet-4-6
+  intent_mapping: claude-sonnet-4-6
+
+# How many stories to include per LLM request
+batch_size:
+  glossary: 40
+  semantic_similarity: 100
+  story_summaries: 15
+  business_rules: 10
+  cross_story_links: 80
+  intent_mapping: 100
+
+# Max output tokens per request
+max_tokens:
+  glossary: 8192
+  semantic_similarity: 8192
+  story_summaries: 4096
+  business_rules: 8192
+  cross_story_links: 8192
+  intent_mapping: 8192
+
+# Retry policy
+max_retries: 2
+retry_on:
+  - error
+  - invalid_json
+
+# Corpus location
+corpus:
+  sprints_dir: knowledge/sprints
+  story_pattern: "*/stories/*.md"
+  # Regex pattern for story IDs in your JIRA project (default matches PROJ-1234 format)
+  # story_id_pattern: "[A-Z][A-Z0-9]+-\\d+"

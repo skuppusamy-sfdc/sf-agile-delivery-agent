@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["stories"],
+  "properties": {
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "summary", "action_type", "entities", "business_domain"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "summary": {"type": "string", "minLength": 10},
+          "action_type": {
+            "type": "string",
+            "enum": ["CREATE", "MODIFY", "DELETE", "CONFIGURE", "FIX", "ENHANCE", "REPORT"]
+          },
+          "entities": {
+            "type": "object",
+            "properties": {
+              "objects": {"type": "array", "items": {"type": "string"}},
+              "fields": {"type": "array", "items": {"type": "string"}},
+              "roles": {"type": "array", "items": {"type": "string"}},
+              "processes": {"type": "array", "items": {"type": "string"}},
+              "integrations": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "business_domain": {"type": "string"},
+          "key_criteria": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

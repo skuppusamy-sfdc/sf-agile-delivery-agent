@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["intents"],
+  "properties": {
+    "intents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["intent_id", "canonical_question", "query_variations", "business_process"],
+        "properties": {
+          "intent_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "canonical_question": {"type": "string"},
+          "query_variations": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+          "business_process": {"type": "string"},
+          "relevant_objects": {"type": "array", "items": {"type": "string"}},
+          "relevant_stories": {"type": "array", "items": {"type": "string"}},
+          "relevant_components": {"type": "array", "items": {"type": "string"}},
+          "answer_type": {
+            "type": "string",
+            "enum": ["explanation", "list", "comparison", "impact_analysis", "process_flow"]
+          }
+        }
+      }
+    }
+  }
+}

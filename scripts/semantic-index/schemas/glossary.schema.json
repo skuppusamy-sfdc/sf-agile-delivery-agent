@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["terms"],
+  "properties": {
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "expansion", "definition", "category"],
+        "properties": {
+          "term": {"type": "string", "minLength": 1},
+          "expansion": {"type": "string"},
+          "definition": {"type": "string"},
+          "category": {
+            "type": "string",
+            "enum": ["acronym", "role", "business_object", "process", "status_value", "system", "integration", "metric"]
+          },
+          "related_sf_object": {"type": ["string", "null"]},
+          "found_in": {"type": "array", "items": {"type": "string"}},
+          "synonyms": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

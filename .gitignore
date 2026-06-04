@@ -1,0 +1,31 @@
+# Cache and working files
+.semantic-index-cache/
+__pycache__/
+*.pyc
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Generated indexes (large, rebuild from source)
+# Uncomment if you don't want to track generated indexes in git:
+# knowledge/SEMANTIC-GLOSSARY.json
+# knowledge/STORY-SUMMARIES.json
+# knowledge/BUSINESS-RULES.json
+# knowledge/SEMANTIC-SIMILARITY.json
+# knowledge/CROSS-STORY-LINKS.json
+# knowledge/INTENT-MAP.json
+
+# Knowledge corpus (project-specific, large)
+knowledge/sprints/
+knowledge/metadata/
+knowledge/traceability/

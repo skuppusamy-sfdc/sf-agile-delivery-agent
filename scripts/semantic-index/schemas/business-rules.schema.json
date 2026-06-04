@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["rules"],
+  "properties": {
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["story_id", "rule_id", "trigger", "action", "action_type"],
+        "properties": {
+          "story_id": {"type": "string"},
+          "rule_id": {"type": "string"},
+          "trigger": {"type": "string"},
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["object", "field", "operator", "value"],
+              "properties": {
+                "object": {"type": "string"},
+                "field": {"type": "string"},
+                "operator": {"type": "string"},
+                "value": {"type": ["string", "number", "boolean", "null"]}
+              }
+            }
+          },
+          "action": {"type": "string"},
+          "action_type": {
+            "type": "string",
+            "enum": ["QUERY", "DISPLAY", "UPDATE", "CREATE", "DELETE", "VALIDATE", "NOTIFY", "NAVIGATE"]
+          },
+          "objects_involved": {"type": "array", "items": {"type": "string"}},
+          "fields_involved": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}
