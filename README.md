@@ -164,6 +164,10 @@ scripts/semantic-index/
     └── *.schema.json
 ```
 
+## Author
+
+**Sakthi Kuppusamy** — [LinkedIn](https://www.linkedin.com/in/sakthikuppusamy/)
+
 ## License
 
 MIT License - Copyright (c) 2024-2026 Sakthi Kuppusamy
