@@ -166,4 +166,4 @@ scripts/semantic-index/
 
 ## License
 
-Internal use.
+MIT License - Copyright (c) 2024-2026 Sakthi Kuppusamy
