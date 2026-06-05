@@ -1,0 +1,74 @@
+# =============================================================================
+# Salesforce Knowledge Workspace - Configuration (v2)
+# =============================================================================
+# Copy this file to `workspace.config.yaml` and customize for your project.
+# All scripts and AI rules read from this file. Do NOT commit secrets.
+# =============================================================================
+
+project:
+  name: "Acme Salesforce Program"          # Display name for your program
+  short_code: "ACME"                       # 3-6 char slug used in filenames
+  description: "Salesforce delivery knowledge workspace for the Acme program."
+
+# ---------------------------------------------------------------------------
+# Story / Issue Identification
+# ---------------------------------------------------------------------------
+# Regex used by scripts to recognize story IDs inside HTML, MD, and code.
+# Examples:
+#   JIRA default ............. ^[A-Z]+-\d+$              -> PROJ-123
+#   Custom prefixed numeric .. ^[A-Z]{2,}\d+-\d+$         -> ABC123-45
+#   Numeric only ............. ^\d{4,}$                   -> 1234
+story_id:
+  pattern: "^[A-Z]+-\\d+$"
+  example: "PROJ-123"
+  jira_base_url: "https://your-org.atlassian.net/browse/"
+  copado_base_url: ""                      # optional
+
+# ---------------------------------------------------------------------------
+# External Repositories
+# ---------------------------------------------------------------------------
+# Salesforce metadata source-of-truth repo.
+# Clone the repo into knowledge/metadata/ so the AI can search actual
+# deployed code (Flows, Apex, IPs, DataRaptors, etc.) directly.
+# The catalog script also reads from local_path if set.
+metadata_repo:
+  local_path: "knowledge/metadata/my-salesforce-repo"  # path to the cloned repo
+  remote_url: "https://github.com/your-org/your-sf-repo"
+  default_branch: "main"
+  metadata_root: "force-app/main/default"
+
+# ---------------------------------------------------------------------------
+# Sprint Cadence
+# ---------------------------------------------------------------------------
+sprints:
+  cadence_weeks: 2
+  start_date: "2026-01-01"
+  html_export_pattern: "*.html"            # filename pattern of JIRA exports
+  folder_pattern: "Sprint {n}"             # subfolder naming under knowledge/sprints/
+
+# ---------------------------------------------------------------------------
+# Roles in this workspace
+# ---------------------------------------------------------------------------
+roles:
+  - solution-architect
+  - technical-architect
+  - developer
+  - tester
+
+# ---------------------------------------------------------------------------
+# Indexing / Token Optimization
+# ---------------------------------------------------------------------------
+indexing:
+  refresh_on_sprint_drop: true             # auto-rebuild indexes when new HTML lands
+  prefer_index_over_html: true             # AI rule: read index files before raw HTML
+  large_file_threshold_lines: 5000
+
+# ---------------------------------------------------------------------------
+# v2: Source-of-Truth Precedence (informational)
+# ---------------------------------------------------------------------------
+# When deployed metadata in /knowledge/metadata/ disagrees with JIRA Solution
+# on current state, metadata wins. See _cursor/rules/metadata-is-source-of-truth.mdc.
+source_of_truth:
+  current_state: "knowledge/metadata"      # deployed reality
+  intent: "knowledge/sprints"              # JIRA AC + Solution
+  decisions: "knowledge/architecture"      # ADRs

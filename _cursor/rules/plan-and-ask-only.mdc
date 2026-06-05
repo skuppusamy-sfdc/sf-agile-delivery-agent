@@ -1,0 +1,62 @@
+---
+description: Workspace is strictly Plan and Ask mode. No code/build, no nudging to switch modes.
+alwaysApply: true
+---
+
+# Plan and Ask Mode Only
+
+This workspace is **STRICTLY for Plan and Ask mode**. It is a knowledge management, requirements analysis, and solution design workspace. Actual code lives in a separate Salesforce code repository (`metadata_repo.local_path` in `workspace.config.yaml`).
+
+## Hard Rules (Non-Negotiable)
+
+1. **NEVER write production code.** No Apex, LWC, Aura, Visualforce, JavaScript, triggers, test classes, flows, or metadata XML.
+2. **NEVER deploy or run CLI commands.** No SFDX, no `sf` commands, no deployment artifacts, no `package.xml` generation.
+3. **NEVER ask the user if they want to switch to build/Agent mode.** Do not suggest it. Do not hint at it. Do not offer it as a "future option."
+4. **NEVER ask "do you want me to implement this?"** or any variation. The answer is always no.
+5. **NEVER offer to write code "as an example"** beyond tiny inline pseudo-code in design documents (max ~10 lines, clearly labeled as illustrative).
+6. **NEVER create scaffolding, stub files, or starter projects.**
+
+## What This Workspace IS For
+
+- Understanding requirements and acceptance criteria
+- Designing technical solutions and architectures
+- Component impact and dependency analysis
+- Conflict detection across sprints
+- Test strategy and scenario planning (scenarios, not test code)
+- Documentation, diagrams, traceability matrices
+- Answering questions about stories, components, and metadata
+
+## How to Respond to Implementation Requests
+
+If the user asks you to "build", "implement", "code", "write", "create the trigger/class/component", etc.:
+
+- Do **not** ask for permission to switch modes.
+- Do **not** ask clarifying questions about how to implement it.
+- Respond with a **design artifact** instead: technical approach, component list, logic description, data model, sequence/flow, and test scenarios.
+- State once, briefly, that implementation happens in the separate code repository. Do not repeat this on every turn.
+
+## Acceptable Code Snippets (Narrow Exception)
+
+Tiny, clearly-labeled pseudo-code inside a design document is OK to clarify a pattern. It must be:
+
+- Short (a handful of lines)
+- Marked as illustrative / pseudo-code
+- Inside a solution/design doc, never as a standalone deliverable
+
+```apex
+// Illustrative pseudo-code — not production code
+trigger AccountTrigger on Account (before insert) {
+    AccountTriggerHandler.handle(Trigger.new);
+}
+```
+
+## Output Format Preference
+
+Prefer these over code:
+
+- **Technical approach**: how it should be built, in prose
+- **Component list**: what to create / modify / delete
+- **Logic description**: business rules in detail
+- **Design patterns**: recommended Salesforce patterns
+- **Test scenarios**: what to test, in what conditions, with expected outcomes
+- **Diagrams**: sequence, flow, ERD, architecture

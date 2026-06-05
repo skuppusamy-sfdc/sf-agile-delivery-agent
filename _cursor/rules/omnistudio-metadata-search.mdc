@@ -1,0 +1,69 @@
+---
+description: When answering questions about what fields, objects, or components an OmniStudio feature uses, follow the full call-chain search protocol. Never stop at one metadata layer (e.g. DataRaptor alone). Always trace FlexCard → IP → Sub-IP → DataRaptor → Object, and check for inline SOQL in IPs.
+alwaysApply: true
+---
+
+# OmniStudio Metadata Search Protocol
+
+When answering questions about what fields, objects, or components a feature uses — especially OmniStudio-based features (FlexCards, Integration Procedures, DataRaptors, OmniScripts) — follow the full call-chain search protocol below. Never stop at one metadata layer.
+
+## Metadata Locations (All Must Be Searched)
+
+The workspace has metadata in two parallel structures. Both must be checked:
+
+| Folder | Contains | Format |
+|---|---|---|
+| `knowledge/metadata/**/vlocity/DataRaptor/` | DataRaptor definitions (Extract, Transform, Load) | JSON |
+| `knowledge/metadata/**/vlocity/FlexCard/` | FlexCard definitions | JSON |
+| `knowledge/metadata/**/force-app/main/default/omniIntegrationProcedures/` | Integration Procedures | XML (.oip-meta.xml) |
+| `knowledge/metadata/**/force-app/main/default/omniUiCard/` | OmniUiCards / FlexCards | XML (.ouc-meta.xml) |
+| `knowledge/metadata/**/force-app/main/default/omniScripts/` | OmniScripts | XML |
+| `knowledge/metadata/**/force-app/main/default/omniDataTransforms/` | DataRaptor transforms | XML |
+| `knowledge/metadata/**/force-app/main/default/classes/` | Apex classes | Apex (.cls) |
+| `knowledge/metadata/**/force-app/main/default/triggers/` | Apex triggers | Apex (.trigger) |
+| `knowledge/metadata/**/force-app/main/default/flows/` | Flows | XML (.flow-meta.xml) |
+
+## Full Call-Chain Trace (Required)
+
+OmniStudio features are layered. Always trace top-down:
+
+1. **UI Layer**: OmniUiCard / FlexCard — identify which IP or DataRaptor it calls as its data source
+2. **Orchestration Layer**: Integration Procedure — read the latest active version; identify:
+   - Sub-IP calls (`Integration Procedure Action` elements → `integrationProcedureKey`)
+   - DataRaptor calls (`DataRaptor Extract Action` / `DataRaptor Turbo Action` elements → `bundle`)
+   - **Inline SOQL** in `Set Values` elements (`COUNTQUERY`, `QUERY`, `FILTER` formulas) — these access objects directly without a DataRaptor
+3. **Data Layer**: DataRaptor — read the `_Items.json` to find queried objects and fields
+4. **Apex / Flow Layer**: Check if any Apex classes or Flows feed data into the above or are triggered by the same objects
+
+## Inline SOQL in Integration Procedures
+
+IPs frequently use `COUNTQUERY` and `QUERY` inside `Set Values` / `elementValueMap` to access objects that no DataRaptor touches. These are encoded as HTML entities in the XML (e.g., `&quot;`, `&apos;`). Always decode and extract:
+- The object name (FROM clause)
+- The fields referenced (SELECT, WHERE clauses)
+- Filter values (WHERE literals)
+
+## Version Selection
+
+When multiple versions of a component exist (e.g., `_Procedure_1` through `_Procedure_6`), always read the **highest-numbered version** as the current active state. Earlier versions are historical.
+
+## Reporting
+
+When reporting which objects and fields a feature uses, organize by:
+1. **Data source** (which IP/DataRaptor/inline SOQL provides it)
+2. **Object** (API name)
+3. **Fields** (API names, distinguishing between output fields vs. filter-only fields)
+4. **Purpose** (what the field is used for in the UI)
+
+Never present a DataRaptor analysis alone as complete. Always state which IPs and UiCards consume it, and whether those IPs add additional object access via inline SOQL.
+
+## Search Tool Guidance
+
+When searching for error messages, field references, or component names in the deployed metadata:
+
+1. **Use Grep with the explicit directory path** as the primary search tool for metadata content. Example:
+   - `Grep` with `path: knowledge/metadata/<repo>/force-app/main/default/flows` to search all flows
+   - `Grep` with `path: knowledge/metadata/<repo>/force-app/main/default/classes` to search Apex classes
+   - Replace `<repo>` with the actual cloned repo folder name under `knowledge/metadata/`
+2. **Use Glob for file discovery** (e.g., finding all `.flow-meta.xml` or `.cls` files).
+3. **Always search the actual metadata files** before concluding a component or error message doesn't exist. Never assume metadata is missing based on index files alone — the deployed XML/Apex/JSON is the source of truth.
+4. **Also search Copado traceability** (`knowledge/traceability/report*.csv`) to map JIRA stories to Copado user stories and their committed metadata components.

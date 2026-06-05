@@ -1,0 +1,44 @@
+---
+description: Deployed metadata in /knowledge/metadata/ is the source of truth for current system state. JIRA AC/Solution describes intent; metadata describes reality. When they conflict, metadata wins.
+alwaysApply: true
+---
+
+# Metadata Is the Source of Truth
+
+`/knowledge/metadata/` documents the **deployed Salesforce metadata** — the actual fields, objects, flows, classes, validation rules, and configuration that exist in the org today.
+
+JIRA stories (`/knowledge/sprints/**/*.html`) describe **intent** at the time the story was written: what the team planned to build and why.
+
+These two sources can drift apart. Devs make on-the-fly decisions, hotfixes happen, scope changes mid-sprint, AC doesn't always get updated post-deployment.
+
+## Precedence Rule
+
+When the deployed metadata in `/knowledge/metadata/` describes the current state of a component differently than the JIRA AC or Solution column does:
+
+1. **Use the metadata as the source of truth** for "what the system actually does today."
+2. **Use the JIRA AC/Solution as the source of truth** for "what was intended" and "why this exists."
+3. When they conflict on facts about current state, **metadata wins.** Note the discrepancy briefly and in passing — do not block, do not produce a separate drift alert section, do not stop work.
+
+## Examples of Application
+
+- "What fields exist on `Account` today?" → Read `/knowledge/metadata/`. Don't infer from JIRA Solution text.
+- "What does the trigger do today?" → Read `/knowledge/metadata/`. JIRA Solution describes the intent; metadata describes the reality.
+- "What was this field supposed to do, and why?" → JIRA Solution wins. Metadata only shows the configuration, not the intent.
+- Designing new work on top of existing components → Ground the design in metadata reality, not in the JIRA Solution from the original story.
+
+## Brief Discrepancy Note Format
+
+When a conflict shows up, mention it inline — one sentence, no fanfare:
+
+> *Note: the deployed metadata shows `Account.Status__c` is a Picklist, while JIRA Solution for [STORY-XXX] describes it as a Checkbox. Using the deployed metadata as ground truth.*
+
+That's it. Continue with the analysis. Do not add a "Drift Alert" section, do not block on confirmation, do not escalate unless explicitly asked.
+
+## When Metadata Is Missing
+
+If `/knowledge/metadata/` does **not** document the relevant component, fall back to the JIRA Solution and AC for intent — and note that metadata documentation is missing for that component (so it can be added later via `templates/metadata-documentation-template.md`).
+
+## Out of Scope
+
+- This rule does **not** authorize writing code or generating new metadata. The strict `plan-and-ask-only.mdc` rule still applies — read-and-reason only, no implementation artifacts.
+- This rule applies to **factual current state**, not to scope or requirements decisions. AC drift from a stakeholder perspective is a different problem (handled by the SA's conflict-detection workflow in `_cursor/skills/sa-cross-sprint-consistency/SKILL.md`).
